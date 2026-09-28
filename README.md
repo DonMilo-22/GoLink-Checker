@@ -1,0 +1,57 @@
+# 🔗 GoLink Checker
+
+> Concurrent URL health checker written in Go.
+
+![Go](https://img.shields.io/badge/Go-1.22%2B-00ADD8?logo=go&logoColor=white)
+![CLI](https://img.shields.io/badge/interface-CLI-black)
+![License](https://img.shields.io/badge/license-MIT-green)
+
+GoLink Checker checks multiple websites in parallel and reports their HTTP status, response time and availability.
+
+## ✨ Features
+
+- Concurrent checks using goroutines
+- Configurable timeout
+- HTTP status and latency
+- Reads URLs from arguments or a text file
+- Compact terminal output
+
+## 🚀 Run it
+
+```bash
+go run . https://github.com https://example.com
+```
+
+Or use a file:
+
+```bash
+go run . -file urls.txt
+```
+
+## ⚙️ Options
+
+```text
+-file <path>       Read one URL per line
+-timeout <seconds> Request timeout, default 5
+```
+
+## 🧠 How it works
+
+Each URL is sent to a worker goroutine. Results travel back through a channel and are printed when they arrive. This keeps the program quick even when one server is slow.
+
+## 🧱 Structure
+
+```text
+main.go
+go.mod
+urls.example.txt
+.gitignore
+```
+
+## 🛠️ Requirements
+
+Go 1.22 or newer.
+
+## 📄 License
+
+MIT.
