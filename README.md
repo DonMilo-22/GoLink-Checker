@@ -55,3 +55,7 @@ Go 1.22 or newer.
 ## 📄 License
 
 MIT.
+
+## 🆕 Recent changes
+
+- Added a final health summary with healthy/failed counts and average response time.
