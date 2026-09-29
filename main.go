@@ -54,8 +54,19 @@ func main() {
 	var wg sync.WaitGroup
 	for _, u := range urls { wg.Add(1); go check(client, u, out, &wg) }
 	go func(){ wg.Wait(); close(out) }()
+
+	success, failed := 0, 0
+	var totalDuration time.Duration
 	for r := range out {
-		if r.Err != nil { fmt.Printf("✗ %-35s ERROR (%s)\n", r.URL, r.Duration.Round(time.Millisecond)); continue }
+		totalDuration += r.Duration
+		if r.Err != nil {
+			failed++
+			fmt.Printf("✗ %-35s ERROR (%s)\n", r.URL, r.Duration.Round(time.Millisecond))
+			continue
+		}
+		if r.Status >= 200 && r.Status < 400 { success++ } else { failed++ }
 		fmt.Printf("✓ %-35s %3d  %s\n", r.URL, r.Status, r.Duration.Round(time.Millisecond))
 	}
+	average := totalDuration / time.Duration(len(urls))
+	fmt.Printf("\nSummary: %d healthy | %d failed | avg %s\n", success, failed, average.Round(time.Millisecond))
 }
