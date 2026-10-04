@@ -58,4 +58,10 @@ MIT.
 
 ## 🆕 Recent changes
 
+### 2026-10-04
+
+- Returns a nonzero exit code when any URL fails or responds with an HTTP error, making it useful in CI scripts.
+
+### Previous update
+
 - Added a final health summary with healthy/failed counts and average response time.
