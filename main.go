@@ -69,4 +69,5 @@ func main() {
 	}
 	average := totalDuration / time.Duration(len(urls))
 	fmt.Printf("\nSummary: %d healthy | %d failed | avg %s\n", success, failed, average.Round(time.Millisecond))
+	if failed > 0 { os.Exit(1) }
 }
