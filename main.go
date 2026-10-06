@@ -41,6 +41,7 @@ func fromFile(path string) ([]string, error) {
 func main() {
 	file := flag.String("file", "", "file containing one URL per line")
 	timeout := flag.Int("timeout", 5, "request timeout in seconds")
+	slow := flag.Int("slow", 1000, "mark responses slower than this many milliseconds")
 	flag.Parse()
 	urls := flag.Args()
 	if *file != "" {
@@ -55,7 +56,7 @@ func main() {
 	for _, u := range urls { wg.Add(1); go check(client, u, out, &wg) }
 	go func(){ wg.Wait(); close(out) }()
 
-	success, failed := 0, 0
+	success, failed, slowCount := 0, 0, 0
 	var totalDuration time.Duration
 	for r := range out {
 		totalDuration += r.Duration
@@ -65,9 +66,11 @@ func main() {
 			continue
 		}
 		if r.Status >= 200 && r.Status < 400 { success++ } else { failed++ }
-		fmt.Printf("✓ %-35s %3d  %s\n", r.URL, r.Status, r.Duration.Round(time.Millisecond))
+		label := ""
+		if r.Duration > time.Duration(*slow)*time.Millisecond { slowCount++; label = "  SLOW" }
+		fmt.Printf("✓ %-35s %3d  %s%s\n", r.URL, r.Status, r.Duration.Round(time.Millisecond), label)
 	}
 	average := totalDuration / time.Duration(len(urls))
-	fmt.Printf("\nSummary: %d healthy | %d failed | avg %s\n", success, failed, average.Round(time.Millisecond))
+	fmt.Printf("\nSummary: %d healthy | %d failed | %d slow | avg %s\n", success, failed, slowCount, average.Round(time.Millisecond))
 	if failed > 0 { os.Exit(1) }
 }
