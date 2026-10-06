@@ -58,6 +58,12 @@ MIT.
 
 ## 🆕 Recent changes
 
+### 2026-10-05
+
+- Added `-slow <ms>` to flag responses slower than a configurable threshold.
+
+### 2026-10-04
+
 ### 2026-10-04
 
 - Returns a nonzero exit code when any URL fails or responds with an HTTP error, making it useful in CI scripts.
