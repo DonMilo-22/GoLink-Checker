@@ -43,6 +43,10 @@ func main() {
 	timeout := flag.Int("timeout", 5, "request timeout in seconds")
 	slow := flag.Int("slow", 1000, "mark responses slower than this many milliseconds")
 	flag.Parse()
+	if *timeout <= 0 || *slow < 0 {
+		fmt.Fprintln(os.Stderr, "timeout must be positive and slow must not be negative")
+		os.Exit(2)
+	}
 	urls := flag.Args()
 	if *file != "" {
 		fu, err := fromFile(*file); if err != nil { fmt.Fprintln(os.Stderr, err); os.Exit(1) }
