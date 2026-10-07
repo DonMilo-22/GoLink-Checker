@@ -58,11 +58,13 @@ MIT.
 
 ## 🆕 Recent changes
 
+### 2026-10-06
+
+- Added validation for timeout and slow-response CLI thresholds.
+
 ### 2026-10-05
 
 - Added `-slow <ms>` to flag responses slower than a configurable threshold.
-
-### 2026-10-04
 
 ### 2026-10-04
 
