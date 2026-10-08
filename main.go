@@ -53,6 +53,12 @@ func main() {
 		urls = append(urls, fu...)
 	}
 	if len(urls) == 0 { fmt.Println("Usage: go run . [-file urls.txt] [-timeout 5] <url...>"); return }
+	seen := map[string]bool{}
+	unique := make([]string, 0, len(urls))
+	for _, u := range urls {
+		if !seen[u] { seen[u] = true; unique = append(unique, u) }
+	}
+	urls = unique
 
 	client := &http.Client{Timeout: time.Duration(*timeout)*time.Second}
 	out := make(chan Result)
