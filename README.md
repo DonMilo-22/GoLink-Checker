@@ -58,6 +58,10 @@ MIT.
 
 ## 🆕 Recent changes
 
+### 2026-10-07
+
+- Duplicate URLs are now removed before checks start, avoiding repeated requests.
+
 ### 2026-10-06
 
 - Added validation for timeout and slow-response CLI thresholds.
