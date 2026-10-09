@@ -13,6 +13,7 @@ import (
 
 type Result struct {
 	URL string
+	FinalURL string
 	Status int
 	Duration time.Duration
 	Err error
@@ -27,7 +28,7 @@ func check(client *http.Client, url string, out chan<- Result, wg *sync.WaitGrou
 	resp, err := client.Get(url)
 	if err != nil { out <- Result{URL:url, Err:err, Duration:time.Since(start)}; return }
 	defer resp.Body.Close()
-	out <- Result{URL:url, Status:resp.StatusCode, Duration:time.Since(start)}
+	out <- Result{URL:url, FinalURL:resp.Request.URL.String(), Status:resp.StatusCode, Duration:time.Since(start)}
 }
 
 func fromFile(path string) ([]string, error) {
@@ -79,6 +80,7 @@ func main() {
 		label := ""
 		if r.Duration > time.Duration(*slow)*time.Millisecond { slowCount++; label = "  SLOW" }
 		fmt.Printf("✓ %-35s %3d  %s%s\n", r.URL, r.Status, r.Duration.Round(time.Millisecond), label)
+		if r.FinalURL != "" && r.FinalURL != r.URL { fmt.Printf("  ↳ %s\n", r.FinalURL) }
 	}
 	average := totalDuration / time.Duration(len(urls))
 	fmt.Printf("\nSummary: %d healthy | %d failed | %d slow | avg %s\n", success, failed, slowCount, average.Round(time.Millisecond))
