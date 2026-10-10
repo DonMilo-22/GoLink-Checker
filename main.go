@@ -68,7 +68,7 @@ func main() {
 	go func(){ wg.Wait(); close(out) }()
 
 	success, failed, slowCount := 0, 0, 0
-	var totalDuration time.Duration
+	var totalDuration, fastest, slowest time.Duration
 	for r := range out {
 		totalDuration += r.Duration
 		if r.Err != nil {
@@ -76,13 +76,19 @@ func main() {
 			fmt.Printf("✗ %-35s ERROR (%s)\n", r.URL, r.Duration.Round(time.Millisecond))
 			continue
 		}
-		if r.Status >= 200 && r.Status < 400 { success++ } else { failed++ }
+		if r.Status >= 200 && r.Status < 400 {
+			success++
+			if fastest == 0 || r.Duration < fastest { fastest = r.Duration }
+			if r.Duration > slowest { slowest = r.Duration }
+		} else { failed++ }
 		label := ""
 		if r.Duration > time.Duration(*slow)*time.Millisecond { slowCount++; label = "  SLOW" }
 		fmt.Printf("✓ %-35s %3d  %s%s\n", r.URL, r.Status, r.Duration.Round(time.Millisecond), label)
 		if r.FinalURL != "" && r.FinalURL != r.URL { fmt.Printf("  ↳ %s\n", r.FinalURL) }
 	}
 	average := totalDuration / time.Duration(len(urls))
-	fmt.Printf("\nSummary: %d healthy | %d failed | %d slow | avg %s\n", success, failed, slowCount, average.Round(time.Millisecond))
+	fmt.Printf("\nSummary: %d healthy | %d failed | %d slow | avg %s", success, failed, slowCount, average.Round(time.Millisecond))
+	if success > 0 { fmt.Printf(" | fastest %s | slowest %s", fastest.Round(time.Millisecond), slowest.Round(time.Millisecond)) }
+	fmt.Println()
 	if failed > 0 { os.Exit(1) }
 }
