@@ -58,6 +58,10 @@ MIT.
 
 ## 🆕 Recent changes
 
+### 2026-10-09
+
+- The final summary now shows the fastest and slowest successful response times.
+
 ### 2026-10-08
 
 - Redirected URLs now show their final destination after the HTTP request completes.
