@@ -1,87 +1,88 @@
-# 🔗 GoLink Checker
+# GoLink Checker
 
-> Concurrent URL health checker written in Go.
+Comprobador concurrente de URLs, desarrollado con Go.
 
-![Go](https://img.shields.io/badge/Go-1.22%2B-00ADD8?logo=go&logoColor=white)
-![CLI](https://img.shields.io/badge/interface-CLI-black)
-![License](https://img.shields.io/badge/license-MIT-green)
+Consulta varias direcciones mediante goroutines y muestra estado HTTP, duración y destino final de redirecciones.
 
-GoLink Checker checks multiple websites in parallel and reports their HTTP status, response time and availability.
+## Funciones actuales
 
-## ✨ Features
+- URLs desde argumentos, archivo de texto o ambos.
+- Eliminación de argumentos duplicados exactamente iguales.
+- Timeout configurable y señalización de respuestas lentas.
+- Resumen con conteos, promedio y tiempos mínimo/máximo de respuestas saludables.
+- Código de salida para integrarlo en scripts.
 
-- Concurrent checks using goroutines
-- Configurable timeout
-- HTTP status and latency
-- Reads URLs from arguments or a text file
-- Compact terminal output
+## Requisitos
 
-## 🚀 Run it
+Go 1.22 o superior y conexión a los destinos que se quieran comprobar.
 
-```bash
-go run . https://github.com https://example.com
-```
-
-Or use a file:
+## Instalación y uso
 
 ```bash
-go run . -file urls.txt
+git clone https://github.com/DonMilo-22/GoLink-Checker.git
+cd GoLink-Checker
+go run . -timeout 5 -slow 1000 https://github.com https://example.com
 ```
 
-## ⚙️ Options
+Desde archivo:
+
+```bash
+go run . -file urls.example.txt
+```
+
+El archivo acepta una URL por línea; ignora líneas vacías y comentarios que comienzan con `#`.
+
+## Opciones
+
+Coloca las opciones antes de las URLs.
+
+| Opción | Predeterminado | Uso |
+|---|---|---|
+| `-file <ruta>` | Sin archivo | Agrega URLs de un archivo de texto. |
+| `-timeout <segundos>` | `5` | Tiempo máximo por solicitud; debe ser positivo. |
+| `-slow <milisegundos>` | `1000` | Marca `SLOW` si la duración supera el umbral; admite cero. |
+
+## Ejemplo de salida
+
+Salida ilustrativa; tiempos y orden varían porque las solicitudes son concurrentes:
 
 ```text
--file <path>       Read one URL per line
--timeout <seconds> Request timeout, default 5
+✓ https://example.com                 200  120ms
+
+Summary: 1 healthy | 0 failed | 0 slow | avg 120ms | fastest 120ms | slowest 120ms
 ```
 
-## 🧠 How it works
+## Estados y códigos de salida
 
-Each URL is sent to a worker goroutine. Results travel back through a channel and are printed when they arrive. This keeps the program quick even when one server is slow.
+Se considera saludable una respuesta HTTP entre 200 y 399. El símbolo `✓` indica que hubo una respuesta HTTP; consulta el número de estado y el resumen para saber si fue saludable. Se siguen redirecciones con el cliente HTTP de Go y se muestra el destino final cuando cambia.
 
-## 🧱 Structure
+| Código del ejecutable | Significado |
+|---|---|
+| `0` | Todas las comprobaciones fueron saludables; también se usa al mostrar uso sin URLs. |
+| `1` | Alguna solicitud falló, hubo estado HTTP fuera de 200–399 o no se pudo leer el archivo. |
+| `2` | Timeout/umbral inválido o error de análisis de opciones. |
 
-```text
-main.go
-go.mod
-urls.example.txt
-.gitignore
+Para conservar estos códigos en CI, compila y ejecuta el binario: `go run` puede presentar el código del programa a través de su propio error de ejecución.
+
+```bash
+go build -o golink-checker .
+./golink-checker -file urls.example.txt
 ```
 
-## 🛠️ Requirements
+## Almacenamiento y límites
 
-Go 1.22 or newer.
+No guarda resultados. Agrega `https://` a entradas sin esquema. La deduplicación ocurre antes de esa normalización. La duración mide la solicitud hasta recibir la respuesta, no la descarga completa del contenido. El promedio incluye intentos fallidos; mínimo y máximo incluyen únicamente respuestas saludables. No verifica enlaces internos ni contenido de páginas.
 
-## 📄 License
+## Comprobaciones
 
-MIT.
+`go build .` comprueba la compilación. Para comprobar la conectividad, ejecuta el ejemplo contra destinos conocidos; sus resultados dependen de la red.
 
-## 🆕 Recent changes
+## Autor y licencia
 
-### 2026-10-09
+Desarrollado por [DonMilo-22](https://github.com/DonMilo-22).
 
-- The final summary now shows the fastest and slowest successful response times.
+Licencia: MIT.
 
-### 2026-10-08
+## Historial
 
-- Redirected URLs now show their final destination after the HTTP request completes.
-
-### 2026-10-07
-
-- Duplicate URLs are now removed before checks start, avoiding repeated requests.
-
-### 2026-10-06
-
-- Added validation for timeout and slow-response CLI thresholds.
-
-### 2026-10-05
-
-- Added `-slow <ms>` to flag responses slower than a configurable threshold.
-
-### 2026-10-04
-
-- Returns a nonzero exit code when any URL fails or responds with an HTTP error, making it useful in CI scripts.
-
-### Previous update
-
-- Added a final health summary with healthy/failed counts and average response time.
+Consulta [CHANGELOG.md](CHANGELOG.md) para ver las actualizaciones.
