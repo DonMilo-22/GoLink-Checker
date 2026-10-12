@@ -67,7 +67,7 @@ func main() {
 	for _, u := range urls { wg.Add(1); go check(client, u, out, &wg) }
 	go func(){ wg.Wait(); close(out) }()
 
-	success, failed, slowCount := 0, 0, 0
+	success, failed, slowCount, redirected := 0, 0, 0, 0
 	var totalDuration, fastest, slowest time.Duration
 	for r := range out {
 		totalDuration += r.Duration
@@ -84,10 +84,10 @@ func main() {
 		label := ""
 		if r.Duration > time.Duration(*slow)*time.Millisecond { slowCount++; label = "  SLOW" }
 		fmt.Printf("✓ %-35s %3d  %s%s\n", r.URL, r.Status, r.Duration.Round(time.Millisecond), label)
-		if r.FinalURL != "" && r.FinalURL != r.URL { fmt.Printf("  ↳ %s\n", r.FinalURL) }
+		if r.FinalURL != "" && r.FinalURL != r.URL { redirected++; fmt.Printf("  ↳ %s\n", r.FinalURL) }
 	}
 	average := totalDuration / time.Duration(len(urls))
-	fmt.Printf("\nSummary: %d healthy | %d failed | %d slow | avg %s", success, failed, slowCount, average.Round(time.Millisecond))
+	fmt.Printf("\nSummary: %d healthy | %d failed | %d slow | %d redirected | avg %s", success, failed, slowCount, redirected, average.Round(time.Millisecond))
 	if success > 0 { fmt.Printf(" | fastest %s | slowest %s", fastest.Round(time.Millisecond), slowest.Round(time.Millisecond)) }
 	fmt.Println()
 	if failed > 0 { os.Exit(1) }
