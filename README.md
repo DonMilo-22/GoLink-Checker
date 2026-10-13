@@ -87,6 +87,10 @@ Licencia: MIT.
 
 - The final summary now includes how many checked URLs redirected to a different destination.
 
+## Actualización adicional 2026-10-12
+
+- URL results now include the HTTP status text beside the numeric status.
+
 ## Historial
 
 Consulta [CHANGELOG.md](CHANGELOG.md) para ver las actualizaciones.
