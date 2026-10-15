@@ -94,3 +94,7 @@ Licencia: MIT.
 ## Historial
 
 Consulta [CHANGELOG.md](CHANGELOG.md) para ver las actualizaciones.
+
+## Actualización 2026-10-14
+
+- HTTP responses with status 400 or higher now display a failure mark instead of a success mark.
