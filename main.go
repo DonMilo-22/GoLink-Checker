@@ -85,7 +85,7 @@ func main() {
 		if r.Duration > time.Duration(*slow)*time.Millisecond { slowCount++; label = "  SLOW" }
 		mark := "✓"
 		if r.Status >= 400 { mark = "✗" }
-		fmt.Printf("%s %-35s %3d %-18s %s%s\\n", mark, r.URL, r.Status, http.StatusText(r.Status), r.Duration.Round(time.Millisecond), label)
+		fmt.Printf("%s %-35s %3d %-18s %s%s\n", mark, r.URL, r.Status, http.StatusText(r.Status), r.Duration.Round(time.Millisecond), label)
 		if r.FinalURL != "" && r.FinalURL != r.URL { redirected++; fmt.Printf("  ↳ %s\n", r.FinalURL) }
 	}
 	average := totalDuration / time.Duration(len(urls))
