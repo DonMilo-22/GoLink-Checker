@@ -89,7 +89,7 @@ func main() {
 		if r.FinalURL != "" && r.FinalURL != r.URL { redirected++; fmt.Printf("  ↳ %s\n", r.FinalURL) }
 	}
 	average := totalDuration / time.Duration(len(urls))
-	fmt.Printf("\nSummary: %d healthy | %d failed | %d slow | %d redirected | avg %s", success, failed, slowCount, redirected, average.Round(time.Millisecond))
+	fmt.Printf("\nSummary: %d checked | %d healthy | %d failed | %d slow | %d redirected | avg %s", len(urls), success, failed, slowCount, redirected, average.Round(time.Millisecond))
 	if success > 0 { fmt.Printf(" | fastest %s | slowest %s", fastest.Round(time.Millisecond), slowest.Round(time.Millisecond)) }
 	fmt.Println()
 	if failed > 0 { os.Exit(1) }
