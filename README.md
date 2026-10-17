@@ -9,6 +9,7 @@ Consulta varias direcciones mediante goroutines y muestra estado HTTP, duración
 - URLs desde argumentos, archivo de texto o ambos.
 - Eliminación de argumentos duplicados exactamente iguales.
 - Timeout configurable y señalización de respuestas lentas.
+- Modo silencioso para ocultar resultados saludables y mostrar solo errores más el resumen.
 - Resumen con conteos, promedio y tiempos mínimo/máximo de respuestas saludables.
 - Código de salida para integrarlo en scripts.
 
@@ -41,6 +42,7 @@ Coloca las opciones antes de las URLs.
 | `-file <ruta>` | Sin archivo | Agrega URLs de un archivo de texto. |
 | `-timeout <segundos>` | `5` | Tiempo máximo por solicitud; debe ser positivo. |
 | `-slow <milisegundos>` | `1000` | Marca `SLOW` si la duración supera el umbral; admite cero. |
+| `-quiet-healthy` | Desactivado | Oculta las comprobaciones saludables y conserva los fallos y el resumen. |
 
 ## Ejemplo de salida
 
@@ -102,3 +104,8 @@ Consulta [CHANGELOG.md](CHANGELOG.md) para ver las actualizaciones.
 ## Actualización 2026-10-15
 
 - The final summary now reports the total number of unique URLs checked.
+
+
+## Actualización 2026-10-16
+
+- Added `-quiet-healthy` to reduce terminal noise during large checks while keeping failed results and the final summary visible.
