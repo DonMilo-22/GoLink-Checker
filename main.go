@@ -42,7 +42,7 @@ func fromFile(path string) ([]string, error) {
 func main() {
 	file := flag.String("file", "", "file containing one URL per line")
 	timeout := flag.Int("timeout", 5, "request timeout in seconds")
-	slow := flag.Int("slow", 1000, "mark responses slower than this many milliseconds")
+	slow := flag.Int("slow", 1000, "mark responses slower than this many milliseconds")\n\tquiet := flag.Bool("quiet-healthy", false, "print only failed checks and the final summary")
 	flag.Parse()
 	if *timeout <= 0 || *slow < 0 {
 		fmt.Fprintln(os.Stderr, "timeout must be positive and slow must not be negative")
