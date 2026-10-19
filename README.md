@@ -109,3 +109,14 @@ Consulta [CHANGELOG.md](CHANGELOG.md) para ver las actualizaciones.
 ## Actualización 2026-10-16
 
 - Added `-quiet-healthy` to reduce terminal noise during large checks while keeping failed results and the final summary visible.
+
+
+## Utilidad nueva: limpiar listas de URLs
+
+El script auxiliar elimina líneas vacías, comentarios y URLs repetidas sin alterar el orden de la primera aparición. La comparación ignora mayúsculas y minúsculas.
+
+```bash
+go run tools/url-dedupe.go urls.example.txt > urls-clean.txt
+```
+
+El archivo original se conserva; el resultado se escribe en la salida estándar para que puedas redirigirlo a otro archivo.
