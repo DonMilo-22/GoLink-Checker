@@ -1,3 +1,8 @@
+
+
+### 2026-10-18
+
+- Added `tools/url-dedupe.go`, a standalone helper to remove blank lines, comments and case-insensitive duplicates from URL lists while preserving first-seen order.
 # Historial de cambios
 
 Entradas originales conservadas en inglés. Las fechas corresponden al historial existente; la última entrada no tenía fecha registrada.
