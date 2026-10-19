@@ -113,7 +113,7 @@ Consulta [CHANGELOG.md](CHANGELOG.md) para ver las actualizaciones.
 
 ## Utilidad nueva: limpiar listas de URLs
 
-El script auxiliar elimina líneas vacías, comentarios y URLs repetidas sin alterar el orden de la primera aparición. La comparación ignora mayúsculas y minúsculas.
+El script auxiliar elimina líneas vacías, comentarios y URLs repetidas sin alterar el orden de la primera aparición. La comparación ignora mayúsculas y minúsculas en el esquema y el host, pero conserva la distinción entre mayúsculas y minúsculas en la ruta.
 
 ```bash
 go run tools/url-dedupe.go urls.example.txt > urls-clean.txt
