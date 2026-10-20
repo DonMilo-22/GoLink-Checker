@@ -120,3 +120,15 @@ go run tools/url-dedupe.go urls.example.txt > urls-clean.txt
 ```
 
 El archivo original se conserva; el resultado se escribe en la salida estándar para que puedas redirigirlo a otro archivo.
+
+
+## New utility: summarize checker output
+
+Save a run's output to a text file, then count lines containing detected HTTP status codes:
+
+```bash
+go run . > checker-output.txt
+go run tools/status-summary.go checker-output.txt
+```
+
+The helper classifies detected 2xx/3xx statuses separately from other HTTP status codes. It is a lightweight summary of text output, not a replacement for the checker's detailed results.
