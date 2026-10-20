@@ -1,5 +1,10 @@
 
 
+### 2026-10-19
+
+- Added `tools/status-summary.go` to summarize HTTP status codes in saved checker output.
+
+
 ### 2026-10-18
 
 - Added `tools/url-dedupe.go`, a standalone helper to remove blank lines, comments and case-insensitive duplicates from URL lists while preserving first-seen order.
