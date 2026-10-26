@@ -10,6 +10,7 @@ Consulta varias direcciones mediante goroutines y muestra estado HTTP, duración
 - Eliminación de argumentos duplicados exactamente iguales.
 - Timeout configurable y señalización de respuestas lentas.
 - Modo silencioso para ocultar resultados saludables y mostrar solo errores más el resumen.
+- User-Agent HTTP configurable para identificar el cliente en los servidores consultados.
 - Resumen con conteos, promedio y tiempos mínimo/máximo de respuestas saludables.
 - Código de salida para integrarlo en scripts.
 
@@ -43,6 +44,7 @@ Coloca las opciones antes de las URLs.
 | `-timeout <segundos>` | `5` | Tiempo máximo por solicitud; debe ser positivo. |
 | `-slow <milisegundos>` | `1000` | Marca `SLOW` si la duración supera el umbral; admite cero. |
 | `-quiet-healthy` | Desactivado | Oculta las comprobaciones saludables y conserva los fallos y el resumen. |
+| `-user-agent <texto>` | `GoLink-Checker/1.0` | Define el encabezado HTTP User-Agent enviado en cada solicitud. |
 
 ## Ejemplo de salida
 
@@ -132,3 +134,12 @@ go run tools/status-summary.go checker-output.txt
 ```
 
 The helper classifies detected 2xx/3xx statuses separately from other HTTP status codes. It is a lightweight summary of text output, not a replacement for the checker's detailed results.
+
+
+## Actualización 2026-10-25
+
+- Added `-user-agent` to customize the HTTP User-Agent header for all URL checks.
+
+```bash
+go run . -user-agent "MyMonitor/1.0" https://example.com
+```
