@@ -143,3 +143,7 @@ The helper classifies detected 2xx/3xx statuses separately from other HTTP statu
 ```bash
 go run . -user-agent "MyMonitor/1.0" https://example.com
 ```
+
+## Actualización 2026-10-30
+
+- Added `-method GET|HEAD` to select the HTTP request method. `HEAD` can check response status without downloading the response body. Example: `go run . -method HEAD https://example.com`.
