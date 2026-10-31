@@ -19,13 +19,13 @@ type Result struct {
 	Err error
 }
 
-func check(client *http.Client, url, userAgent string, out chan<- Result, wg *sync.WaitGroup) {
+func check(client *http.Client, url, userAgent, method string, out chan<- Result, wg *sync.WaitGroup) {
 	defer wg.Done()
 	if !strings.HasPrefix(url, "http://") && !strings.HasPrefix(url, "https://") {
 		url = "https://" + url
 	}
 	start := time.Now()
-	req, err := http.NewRequest(http.MethodGet, url, nil)
+	req, err := http.NewRequest(method, url, nil)
 	if err != nil { out <- Result{URL:url, Err:err, Duration:time.Since(start)}; return }
 	req.Header.Set("User-Agent", userAgent)
 	resp, err := client.Do(req)
@@ -46,11 +46,11 @@ func main() {
 	file := flag.String("file", "", "file containing one URL per line")
 	timeout := flag.Int("timeout", 5, "request timeout in seconds")
 	slow := flag.Int("slow", 1000, "mark responses slower than this many milliseconds")
-	userAgent := flag.String("user-agent", "GoLink-Checker/1.0", "custom HTTP User-Agent header")
+	userAgent := flag.String("user-agent", "GoLink-Checker/1.0", "custom HTTP User-Agent header")\n\tmethod := flag.String("method", "GET", "HTTP method: GET or HEAD")
 	quiet := flag.Bool("quiet-healthy", false, "print only failed checks and the final summary")
 	flag.Parse()
-	if *timeout <= 0 || *slow < 0 {
-		fmt.Fprintln(os.Stderr, "timeout must be positive and slow must not be negative")
+	if *timeout <= 0 || *slow < 0 || (*method != "GET" && *method != "HEAD") {
+		fmt.Fprintln(os.Stderr, "timeout must be positive, slow must not be negative, and method must be GET or HEAD")
 		os.Exit(2)
 	}
 	urls := flag.Args()
@@ -69,7 +69,7 @@ func main() {
 	client := &http.Client{Timeout: time.Duration(*timeout)*time.Second}
 	out := make(chan Result)
 	var wg sync.WaitGroup
-	for _, u := range urls { wg.Add(1); go check(client, u, *userAgent, out, &wg) }
+	for _, u := range urls { wg.Add(1); go check(client, u, *userAgent, *method, out, &wg) }
 	go func(){ wg.Wait(); close(out) }()
 
 	success, failed, slowCount, redirected := 0, 0, 0, 0
