@@ -47,7 +47,7 @@ func main() {
 	timeout := flag.Int("timeout", 5, "request timeout in seconds")
 	slow := flag.Int("slow", 1000, "mark responses slower than this many milliseconds")
 	userAgent := flag.String("user-agent", "GoLink-Checker/1.0", "custom HTTP User-Agent header")
-\tmethod := flag.String("method", "GET", "HTTP method: GET or HEAD")
+	method := flag.String("method", "GET", "HTTP method: GET or HEAD")
 	quiet := flag.Bool("quiet-healthy", false, "print only failed checks and the final summary")
 	flag.Parse()
 	if *timeout <= 0 || *slow < 0 || (*method != "GET" && *method != "HEAD") {
