@@ -147,3 +147,7 @@ go run . -user-agent "MyMonitor/1.0" https://example.com
 ## Actualización 2026-10-30
 
 - Added `-method GET|HEAD` to select the HTTP request method. `HEAD` can check response status without downloading the response body. Example: `go run . -method HEAD https://example.com`.
+
+## Actualización 2026-11-02
+
+- Added `-workers` to limit concurrent URL checks (default: 10). Example: `go run . -workers 4 https://example.com https://openai.com`.
