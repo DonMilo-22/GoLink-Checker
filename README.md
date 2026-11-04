@@ -151,3 +151,8 @@ go run . -user-agent "MyMonitor/1.0" https://example.com
 ## Actualización 2026-11-02
 
 - Added `-workers` to limit concurrent URL checks (default: 10). Example: `go run . -workers 4 https://example.com https://openai.com`.
+
+
+## Actualización 2026-11-03
+
+- Repaired the `-workers` concurrency option so its flag and worker loop use valid Go syntax. It limits simultaneous URL checks; use `go run . -workers 4 https://example.com`.
