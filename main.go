@@ -48,10 +48,11 @@ func main() {
 	slow := flag.Int("slow", 1000, "mark responses slower than this many milliseconds")
 	userAgent := flag.String("user-agent", "GoLink-Checker/1.0", "custom HTTP User-Agent header")
 	method := flag.String("method", "GET", "HTTP method: GET or HEAD")
+	maxRedirects := flag.Int("max-redirects", 10, "maximum redirects to follow per URL")
 \tworkers := flag.Int("workers", 10, "maximum number of concurrent URL checks")
 	quiet := flag.Bool("quiet-healthy", false, "print only failed checks and the final summary")
 	flag.Parse()
-	if *timeout <= 0 || *slow < 0 || *workers <= 0 || (*method != "GET" && *method != "HEAD") {
+	if *timeout <= 0 || *slow < 0 || *workers <= 0 || *maxRedirects <= 0 || (*method != "GET" && *method != "HEAD") {
 		fmt.Fprintln(os.Stderr, "timeout and workers must be positive, slow must not be negative, and method must be GET or HEAD")
 		os.Exit(2)
 	}
@@ -68,7 +69,7 @@ func main() {
 	}
 	urls = unique
 
-	client := &http.Client{Timeout: time.Duration(*timeout)*time.Second}
+	client := &http.Client{Timeout: time.Duration(*timeout)*time.Second, CheckRedirect: func(req *http.Request, via []*http.Request) error { if len(via) >= *maxRedirects { return http.ErrUseLastResponse }; return nil }}
 	out := make(chan Result)
 	var wg sync.WaitGroup
 	sem := make(chan struct{}, *workers)
